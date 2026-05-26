@@ -1,22 +1,45 @@
-import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
-import Categories from "./components/Categories";
-import FeaturedProducts from "./components/FeaturedProducts";
-import CustomizeCTA from "./components/CustomizeCTA";
-import Reviews from "./components/Reviews";
-import Footer from "./components/Footer";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import Home from "./pages/home";
+import Shop from "./pages/shop";
+import ProductDetails from "./pages/productdetails";
+import Customize from "./pages/customize";
+import Cart from "./pages/cart";
+import Checkout from "./pages/checkout";
 
 function App() {
   return (
-    <>
-      <Navbar />
-      <Hero />
-      <Categories />
-      <FeaturedProducts />
-      <CustomizeCTA />
-      <Reviews />
-      <Footer />
-    </>
+    <BrowserRouter>
+
+      <Routes>
+
+        <Route path="/" element={<Home />} />
+
+        <Route path="/shop" element={<Shop />} />
+
+        <Route
+          path="/product/:id"
+          element={<ProductDetails />}
+        />
+
+        <Route
+          path="/customize"
+          element={<Customize />}
+        />
+
+        <Route
+          path="/cart"
+          element={<Cart />}
+        />
+
+        <Route
+          path="/checkout"
+          element={<Checkout />}
+        />
+
+      </Routes>
+
+    </BrowserRouter>
   );
 }
 
