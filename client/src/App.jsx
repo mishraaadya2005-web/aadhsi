@@ -6,6 +6,7 @@ import ProductDetails from "./pages/productdetails";
 import Customize from "./pages/customize";
 import Cart from "./pages/cart";
 import Checkout from "./pages/checkout";
+import Wishlist from "./pages/wishlist";
 
 function App() {
   return (
@@ -36,6 +37,10 @@ function App() {
           path="/checkout"
           element={<Checkout />}
         />
+
+        <Route path="/product/:id" element={<ProductDetails />} />
+
+        <Route path="/wishlist" element={<Wishlist />} />
 
       </Routes>
 

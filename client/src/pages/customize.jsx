@@ -286,7 +286,47 @@ function Customize() {
           </div>
         </div>
       </section>
+      
+        <section className="px-6 py-12 bg-[#1E1B1B]">        
+          <h2 className="font-serif text-5xl text-[#F7F3F0] text-center mb-10">
+          Previous AADSHI Creations ✨
+        </h2>
 
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          
+          <div className="h-80 rounded-3xl bg-[#2A2525] border border-[#3A3434] flex items-center justify-center">
+            <span className="text-[#D98C95] text-lg">
+              Bouquet Photo 1
+            </span>
+          </div>
+
+          <div className="h-80 rounded-3xl bg-[#2A2525] border border-[#3A3434] flex items-center justify-center">
+            <span className="text-[#D98C95] text-lg">
+              Bouquet Photo 2
+            </span>
+          </div>
+
+          <div className="h-80 rounded-3xl bg-[#2A2525] border border-[#3A3434] flex items-center justify-center">
+            <span className="text-[#D98C95] text-lg">
+              Bouquet Photo 3
+            </span>
+          </div>
+
+          <div className="h-80 rounded-3xl bg-[#2A2525] border border-[#3A3434] flex items-center justify-center">
+            <span className="text-[#D98C95] text-lg">
+              Bouquet Photo 4
+            </span>
+          </div>
+
+        </div>
+
+        <p className="text-center text-[#B8A9A9] mt-8 max-w-3xl mx-auto">
+          Every bouquet is handmade and customized individually.
+          These photographs showcase previous AADSHI creations and serve
+          as inspiration. Your final bouquet will be crafted uniquely
+          according to your selected flowers, wrapping and toy selection.
+        </p>
+      </section>
       <Footer />
     </>
   );
