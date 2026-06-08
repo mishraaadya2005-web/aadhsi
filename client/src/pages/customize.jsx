@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-
 function Customize() {
   const flowers = [
     { id: 1, name: "Rose", price: 50, image: "/bouquet_assets/flowers/flower1.png" },
@@ -327,9 +326,13 @@ function Customize() {
           according to your selected flowers, wrapping and toy selection.
         </p>
       </section>
+      
+
+<Footer />
       <Footer />
     </>
   );
 }
 
 export default Customize;
+

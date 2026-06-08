@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import Home from "./pages/home";
 import Shop from "./pages/shop";
@@ -10,8 +10,7 @@ import Wishlist from "./pages/wishlist";
 
 function App() {
   return (
-    <BrowserRouter>
-
+    
       <Routes>
 
         <Route path="/" element={<Home />} />
@@ -44,7 +43,7 @@ function App() {
 
       </Routes>
 
-    </BrowserRouter>
+    
   );
 }
 
