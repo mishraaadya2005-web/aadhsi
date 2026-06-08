@@ -1,30 +1,51 @@
-import { Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Home from './pages/Home'
-import Shop from './pages/Shop'
-import ProductDetails from './pages/ProductDetails'
+import Home from "./pages/home";
+import Shop from "./pages/shop";
+import ProductDetails from "./pages/productdetails";
+import Customize from "./pages/customize";
+import Cart from "./pages/cart";
+import Checkout from "./pages/checkout";
+import Wishlist from "./pages/wishlist";
 
 function App() {
   return (
-    <Routes>
+    <BrowserRouter>
 
-      <Route
-        path="/"
-        element={<Home />}
-      />
+      <Routes>
 
-      <Route
-        path="/shop"
-        element={<Shop />}
-      />
+        <Route path="/" element={<Home />} />
 
-      <Route
-        path="/product/:id"
-        element={<ProductDetails />}
-      />
+        <Route path="/shop" element={<Shop />} />
 
-    </Routes>
-  )
+        <Route
+          path="/product/:id"
+          element={<ProductDetails />}
+        />
+
+        <Route
+          path="/customize"
+          element={<Customize />}
+        />
+
+        <Route
+          path="/cart"
+          element={<Cart />}
+        />
+
+        <Route
+          path="/checkout"
+          element={<Checkout />}
+        />
+
+        <Route path="/product/:id" element={<ProductDetails />} />
+
+        <Route path="/wishlist" element={<Wishlist />} />
+
+      </Routes>
+
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
