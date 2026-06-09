@@ -7,6 +7,8 @@ import Customize from "./pages/customize";
 import Cart from "./pages/cart";
 import Checkout from "./pages/checkout";
 import Wishlist from "./pages/wishlist";
+import Signup from "./pages/signup";
+import Login from "./pages/login";
 
 function App() {
   return (
@@ -40,7 +42,8 @@ function App() {
         <Route path="/product/:id" element={<ProductDetails />} />
 
         <Route path="/wishlist" element={<Wishlist />} />
-
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
 
     

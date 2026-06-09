@@ -2,16 +2,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
 
-function Cart() {
-  const testCart = async () => {
-    const result = await addToCart({
-      product_id: 1,
-      quantity: 2
-    });
 
-    console.log(result);
-  };
-  
   const cartItems = [
     {
       id: 1,
@@ -177,6 +168,6 @@ function Cart() {
       <Footer />
     </>
   );
-}
+
 
 export default Cart;

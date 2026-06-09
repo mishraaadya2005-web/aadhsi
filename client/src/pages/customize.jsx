@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { saveCustomBouquet } from "../services/customize";
+import { getCurrentUser } from "../services/auth";
 function Customize() {
   const flowers = [
     { id: 1, name: "Rose", price: 50, image: "/bouquet_assets/flowers/flower1.png" },
@@ -32,7 +34,33 @@ function Customize() {
   const [selectedToy, setSelectedToy] = useState(null);
   const [selectedWrapper, setSelectedWrapper] = useState(null);  
   const [message, setMessage] = useState("");
+  const handleSaveBouquet = async () => {
 
+    const user = await getCurrentUser();
+
+    if (!user) {
+      alert("Please login first");
+      return;
+    }
+
+    const bouquetData = {
+      selected_flowers: selectedFlowers,
+      selected_small_flowers: selectedSmallFlowers,
+      wrapper: selectedWrapper?.name || null,
+      toy: selectedToy?.name || null,
+      gift_message: message,
+      total_price: totalPrice,
+      user_id: user.id,
+    };
+
+    const success = await saveCustomBouquet(bouquetData);
+
+    if (success) {
+      alert("Bouquet saved successfully");
+    } else {
+      alert("Failed to save bouquet");
+    }
+  };
   // Guarded Increment/Decrement logic to stop count overflow past constraints
   const handleQuantityChange = (id, delta, isSmall = false) => {
     const prevItems = isSmall ? selectedSmallFlowers : selectedFlowers;
@@ -277,10 +305,12 @@ function Customize() {
 
             <h2 className="text-xl font-serif mb-4 text-[#D98C95]">5. Elegant Gift Card Letter</h2>
             <textarea
+              
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Inscribe your personal message here..."
               className="w-full h-28 bg-[#1E1B1B] rounded-[20px] p-4 outline-none resize-none border border-zinc-800 focus:border-[#D98C95] transition-all text-sm text-zinc-200 shadow-inner"
+              
             />
           </div>
         </div>
@@ -325,11 +355,17 @@ function Customize() {
           as inspiration. Your final bouquet will be crafted uniquely
           according to your selected flowers, wrapping and toy selection.
         </p>
+        <button
+          onClick={handleSaveBouquet}
+          className="mt-6 bg-[#D98C95] text-black px-6 py-3 rounded-full font-semibold hover:scale-105 transition-all"
+        >
+          Save Bouquet
+        </button>
       </section>
       
 
 <Footer />
-      <Footer />
+      
     </>
   );
 }
