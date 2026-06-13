@@ -2,7 +2,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
 
-
+function Cart(){
   const cartItems = [
     {
       id: 1,
@@ -169,5 +169,5 @@ import { Link } from "react-router-dom";
     </>
   );
 
-
+}
 export default Cart;

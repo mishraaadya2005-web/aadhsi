@@ -1,5 +1,9 @@
 function Checkout() {
-    return <h1>Checkout Page</h1>;
+  return (
+    <div className="text-white text-center mt-20 text-4xl">
+      Checkout Page
+    </div>
+  );
 }
 
 export default Checkout;
