@@ -11,3 +11,17 @@ export async function addToCart(data) {
 
   return !error;
 }
+
+export async function getCartItems(userId) {
+  const { data, error } = await supabase
+    .from("cart_items")
+    .select("*")
+    .eq("user_id", userId);
+
+  if (error) {
+    console.log(error);
+    return [];
+  }
+
+  return data;
+}

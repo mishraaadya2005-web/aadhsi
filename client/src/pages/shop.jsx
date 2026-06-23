@@ -4,6 +4,8 @@ import { shopProducts } from "../data/shopProducts";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Heart } from "lucide-react";
+import { addToCart } from "../services/cart";
+import { getCurrentUser } from "../services/auth";
 
 function CustomDropdown({ title, options }) {
   const [open, setOpen] = useState(false);
@@ -42,6 +44,26 @@ function CustomDropdown({ title, options }) {
 }
 
 function Shop() {
+    const handleAddToCart = async (productId) => {
+    const user = await getCurrentUser();
+
+    if (!user) {
+      alert("Please login first");
+      return;
+    }
+
+    const success = await addToCart({
+      user_id: user.id,
+      product_id: productId,
+      quantity: 1,
+    });
+
+    if (success) {
+      alert("Added to cart");
+    } else {
+      alert("Failed to add to cart");
+    }
+  };
   return (
     <>
       <Navbar />
@@ -105,9 +127,23 @@ function Shop() {
                 <p className="text-green-400 mt-2 text-sm">✨ Customizable</p>
               )}
 
-              <Link to={`/product/${product.id}`}>
-                View Details
-              </Link>
+              <div className="mt-4 flex flex-col gap-2">
+
+                <button
+                  onClick={() => handleAddToCart(product.id)}
+                  className="bg-[#D98C95] py-2 rounded-full text-black"
+                >
+                  Add To Cart
+                </button>
+
+                <Link
+                  to={`/product/${product.id}`}
+                  className="text-center"
+                >
+                  View Details
+                </Link>
+
+              </div>
             </div>
           ))}
         </div>
@@ -117,5 +153,6 @@ function Shop() {
     </>
   );
 }
+
 
 export default Shop;

@@ -34,33 +34,33 @@ function Customize() {
   const [selectedToy, setSelectedToy] = useState(null);
   const [selectedWrapper, setSelectedWrapper] = useState(null);  
   const [message, setMessage] = useState("");
-  const handleSaveBouquet = async () => {
+    const handleSaveBouquet = async () => {
 
-    const user = await getCurrentUser();
+      const user = await getCurrentUser();
 
-    if (!user) {
-      alert("Please login first");
-      return;
-    }
+      if (!user) {
+        alert("Please login first");
+        return;
+      }
 
-    const bouquetData = {
-      selected_flowers: selectedFlowers,
-      selected_small_flowers: selectedSmallFlowers,
-      wrapper: selectedWrapper?.name || null,
-      toy: selectedToy?.name || null,
-      gift_message: message,
-      total_price: totalPrice,
-      user_id: user.id,
+      const bouquetData = {
+        selected_flowers: selectedFlowers,
+        selected_small_flowers: selectedSmallFlowers,
+        wrapper: selectedWrapper?.name || null,
+        toy: selectedToy?.name || null,
+        gift_message: message,
+        total_price: totalPrice,
+        user_id: user.id,
+      };
+
+      const success = await saveCustomBouquet(bouquetData);
+
+      if (success) {
+        alert("Bouquet saved successfully");
+      } else {
+        alert("Failed to save bouquet");
+      }
     };
-
-    const success = await saveCustomBouquet(bouquetData);
-
-    if (success) {
-      alert("Bouquet saved successfully");
-    } else {
-      alert("Failed to save bouquet");
-    }
-  };
   // Guarded Increment/Decrement logic to stop count overflow past constraints
   const handleQuantityChange = (id, delta, isSmall = false) => {
     const prevItems = isSmall ? selectedSmallFlowers : selectedFlowers;
