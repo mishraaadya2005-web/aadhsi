@@ -1,3 +1,5 @@
+import { uploadProductImage } from '../services/cloudinary';
+
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../services/supabase'; 
 
@@ -32,7 +34,7 @@ function Admin() {
   const [instaLink, setInstaLink] = useState('');
   const [waNumber, setWaNumber] = useState('');
   const [shipCharges, setShipCharges] = useState('60');
-
+  const [uploadingImage, setUploadingImage] = useState(false);
   // --- FETCH RELEVANT TABLES ON LOAD ---
   useEffect(() => {
     if (isLoggedIn) {
@@ -68,8 +70,8 @@ function Admin() {
           name: prodName,
           category: prodCategory,
           price: parseFloat(prodPrice),
-          description: prodDesc,
           image: prodImage || "https://images.unsplash.com/photo-1561181286-d3fee7d55364?q=80&w=500",
+          // 🌸 Added back now that Aadya has updated her table structure!
           stock: parseInt(prodStock) || 0,
           customizable: isCustomizable === 'Yes',
           featured: isFeatured === 'Yes'
@@ -190,7 +192,38 @@ function Admin() {
                   <input type="number" placeholder="Stock Qty" value={prodStock} onChange={e => setProdStock(e.target.value)} className="bg-[#1E1B1B] text-[#F7F3F0] p-3 rounded-xl border border-gray-800 focus:outline-none" required />
                 </div>
                 <textarea rows="2" placeholder="Item Description..." value={prodDesc} onChange={e => setProdDesc(e.target.value)} className="bg-[#1E1B1B] text-[#F7F3F0] p-3 rounded-xl border border-gray-800 focus:outline-none resize-none" />
-                <input type="text" placeholder="Paste Image URL" value={prodImage} onChange={e => setProdImage(e.target.value)} className="bg-[#1E1B1B] text-[#F7F3F0] p-3 rounded-xl border border-gray-800 focus:outline-none" />
+                <div className="flex flex-col gap-1 bg-[#1E1B1B] p-3 rounded-xl border border-gray-800/50">
+                  <label className="text-[10px] text-gray-400 font-bold block mb-1 uppercase tracking-wider">Product Image Upload</label>
+                  
+                  <input 
+                    type="file" 
+                    accept="image/*"
+                    className="text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-[#D98C95]/10 file:text-[#D98C95] hover:file:bg-[#D98C95]/20 cursor-pointer w-full"
+                    onChange={async (e) => {
+                      const file = e.target.files[0];
+                      if (!file) return;
+
+                      setUploadingImage(true);
+                      try {
+                        const uploadedUrl = await uploadProductImage(file);
+                        setProdImage(uploadedUrl); // This seamlessly attaches the Cloudinary link to your form state!
+                        alert("Image uploaded to Cloudinary successfully! 📸");
+                      } catch (err) {
+                        alert("Image upload failed. Double check your upload preset name or cloud name setup.");
+                      } finally {
+                        setUploadingImage(false);
+                      }
+                    }}
+                  />
+
+                  {uploadingImage && <p className="text-[10px] text-[#D98C95] animate-pulse mt-2">Uploading to cloud...</p>}
+                  
+                  {prodImage && !uploadingImage && (
+                    <div className="mt-2 w-16 h-16 bg-gray-900 rounded-xl overflow-hidden border border-[#D98C95]/30">
+                      <img src={prodImage} alt="Uploaded Preview" className="w-full h-full object-cover" />
+                    </div>
+                  )}
+                </div>
                 
                 <div className="grid grid-cols-2 gap-3 bg-[#1E1B1B] p-3 rounded-xl border border-gray-800/50">
                   <div>
