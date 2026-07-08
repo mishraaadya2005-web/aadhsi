@@ -1,32 +1,81 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { getCurrentUser } from "../services/auth";
+import {
+  getCartItems,
+  removeCartItem
+} from "../services/cart";
+import { shopProducts } from "../data/shopProducts";
+import { createOrder } from "../services/order";
 
-function Cart(){
-  const cartItems = [
-    {
-      id: 1,
-      name: "Rose Crochet Bouquet",
-      price: 499,
-      quantity: 1,
-      image: "https://placehold.co/120x120",
-    },
-    {
-      id: 2,
-      name: "Tulip Bouquet",
-      price: 599,
-      quantity: 1,
-      image: "https://placehold.co/120x120",
-    },
-  ];
+function Cart() {
 
-  const subtotal = cartItems.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0
+  const [cartItems, setCartItems] = useState([]);
+
+  useEffect(() => {
+    loadCart();
+  }, []);
+
+  const loadCart = async () => {
+    const user = await getCurrentUser();
+
+    if (!user) return;
+
+    const items = await getCartItems(user.id);
+
+    setCartItems(items);
+  };
+
+  const handleRemove = async (itemId) => {
+  const success = await removeCartItem(itemId);
+
+  if (success) {
+    setCartItems(
+      cartItems.filter(item => item.id !== itemId)
+    );
+  } else {
+    alert("Failed to remove item");
+  }
+  };
+
+  const subtotal = cartItems.reduce((acc, item) => {
+  const product = shopProducts.find(
+    (p) => p.id === item.product_id
   );
+
+  const price = Number(
+    product?.price?.replace("₹", "") || 0
+  );
+
+  return acc + price * item.quantity;
+}, 0);
 
   const delivery = 99;
   const total = subtotal + delivery;
+
+  const handleCheckout = async () => {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    alert("Please login first");
+    return;
+  }
+
+  const success = await createOrder({
+    user_id: user.id,
+    total_price: total,
+    payment_status: "pending",
+    order_status: "pending",
+  });
+
+  if (success) {
+    alert("Order created!");
+  } else {
+    alert("Order failed");
+  }
+};
 
   return (
     <>
@@ -62,16 +111,21 @@ function Cart(){
           </div>
         ) : (
           <div className="grid lg:grid-cols-[2fr_1fr] gap-10">
+
             {/* LEFT SIDE */}
             <div className="space-y-6">
-              {cartItems.map((item) => (
+              {cartItems.map((item) => {
+                const product = shopProducts.find(
+                  (p) => p.id === item.product_id
+                );
+                return(
                 <div
                   key={item.id}
                   className="bg-[#2A2525] rounded-[30px] p-5 flex flex-col md:flex-row gap-5"
                 >
                   <div className="w-full md:w-[140px] h-[140px] bg-gray-300 rounded-[20px] overflow-hidden">
                     <img
-                      src={item.image}
+                      src="https://placehold.co/120x120"
                       alt={item.name}
                       className="w-full h-full object-cover"
                     />
@@ -80,15 +134,16 @@ function Cart(){
                   <div className="flex-1 flex flex-col justify-between">
                     <div>
                       <h3 className="text-2xl mb-2">
-                        {item.name}
+                        {product?.name}
                       </h3>
 
                       <p className="text-[#D98C95] text-xl">
-                        ₹{item.price}
+                        {product?.price}
                       </p>
                     </div>
 
                     <div className="flex items-center justify-between mt-6 flex-wrap gap-4">
+
                       {/* Quantity */}
                       <div className="flex items-center gap-4">
                         <button className="w-10 h-10 rounded-full bg-[#1E1B1B]">
@@ -103,23 +158,30 @@ function Cart(){
                       </div>
 
                       {/* Remove */}
-                      <button className="text-red-400 hover:text-red-300">
+                      <button
+                        onClick={() => handleRemove(item.id)}
+                        className="text-red-400 hover:text-red-300"
+                      >
                         Remove
                       </button>
+
                     </div>
                   </div>
                 </div>
-              ))}
+              );
+})}
             </div>
 
             {/* RIGHT SIDE */}
             <div>
               <div className="bg-[#2A2525] rounded-[30px] p-8 sticky top-28">
+
                 <h2 className="text-3xl mb-8">
                   Order Summary
                 </h2>
 
                 <div className="space-y-4 text-lg">
+
                   <div className="flex justify-between">
                     <span>Subtotal</span>
                     <span>₹{subtotal}</span>
@@ -134,10 +196,12 @@ function Cart(){
 
                   <div className="flex justify-between text-2xl font-semibold">
                     <span>Total</span>
+
                     <span className="text-[#D98C95]">
                       ₹{total}
                     </span>
                   </div>
+
                 </div>
 
                 {/* Coupon */}
@@ -149,7 +213,9 @@ function Cart(){
                   />
                 </div>
 
-                <button className="w-full mt-6 bg-[#D98C95] text-white py-4 rounded-full text-lg hover:opacity-90 transition">
+                <button 
+                  onClick={handleCheckout}
+                  className="w-full mt-6 bg-[#D98C95] text-white py-4 rounded-full text-lg hover:opacity-90 transition">
                   Proceed To Checkout
                 </button>
 
@@ -159,15 +225,18 @@ function Cart(){
                 >
                   Continue Shopping
                 </Link>
+
               </div>
             </div>
+
           </div>
         )}
+
       </section>
-        
+
       <Footer />
     </>
   );
-
 }
+
 export default Cart;
