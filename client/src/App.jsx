@@ -1,4 +1,6 @@
-import { Routes, Route } from "react-router-dom";
+import React from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
+import Navbar from "./components/Navbar"; 
 
 import Home from "./pages/home";
 import Shop from "./pages/shop";
@@ -9,28 +11,46 @@ import Checkout from "./pages/checkout";
 import Wishlist from "./pages/wishlist";
 import Signup from "./pages/signup";
 import Login from "./pages/login";
-// 1. Added the Admin import here (matching your lowercase filename)
 import Admin from "./pages/admin"; 
 
 function App() {
+  const location = useLocation();
+
+  // Define route paths that should NOT include the regular storefront sidebar layout
+  const standalonePages = ["/admin", "/login", "/signup"];
+  const isStandalone = standalonePages.includes(location.pathname.toLowerCase());
+
+  // Conditional Architecture Wrapper
+  if (isStandalone) {
+    return (
+      <Routes>
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/admin" element={<Admin />} />
+      </Routes>
+    );
+  }
+
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/shop" element={<Shop />} />
+    <div className="flex flex-col md:flex-row min-h-screen bg-[#1E1B1B]">
       
-      {/* 2. Kept only ONE copy of product details route */}
-      <Route path="/product/:id" element={<ProductDetails />} />
+      {/* Persistent Left Sidebar / Mobile Header Drawer */}
+      <Navbar />
 
-      <Route path="/customize" element={<Customize />} />
-      <Route path="/cart" element={<Cart />} />
-      <Route path="/checkout" element={<Checkout />} />
-      <Route path="/wishlist" element={<Wishlist />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/login" element={<Login />} />
+      {/* Dynamic Main Storefront Content Viewport Window */}
+      <main className="flex-1 w-full min-h-screen p-4 sm:p-6 md:p-8 lg:p-12 overflow-y-auto">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/shop" element={<Shop />} />      
+          <Route path="/product/:id" element={<ProductDetails />} />
+          <Route path="/customize" element={<Customize />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/wishlist" element={<Wishlist />} />
+        </Routes>
+      </main>
 
-      {/* 3. Added the brand new Admin URL path */}
-      <Route path="/admin" element={<Admin />} />
-    </Routes>
+    </div>
   );
 }
 

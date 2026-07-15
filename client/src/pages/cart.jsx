@@ -1,4 +1,4 @@
-import Navbar from "../components/Navbar";
+import React from "react";
 import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -78,34 +78,22 @@ function Cart() {
 };
 
   return (
-    <>
-      <Navbar />
-
-      <section className="bg-[#1E1B1B] min-h-screen text-[#F7F3F0] px-[5%] py-12">
-        <p className="text-[#D98C95] mb-2">
-          Shopping Bag ✨
-        </p>
-
-        <h1 className="text-6xl mb-12">
-          Your Cart
-        </h1>
+    <div className="w-full min-h-screen bg-[#1E1B1B] text-[#F7F3F0] flex flex-col justify-between">
+      <section className="max-w-7xl w-full mx-auto px-4 py-6 sm:py-10 animate-fadeIn">
+        
+        <div className="mb-8 md:mb-12">
+          <p className="text-[#D98C95] text-xs font-bold uppercase tracking-widest">Shopping Bag ✨</p>
+          <h1 className="text-3xl sm:text-4xl font-extrabold font-serif tracking-tight mt-1 text-white">Your Cart</h1>
+        </div>
 
         {cartItems.length === 0 ? (
-          <div className="text-center py-24">
-            <div className="text-7xl mb-6">🛒</div>
-
-            <h2 className="text-4xl mb-4">
-              Your Cart is Empty
-            </h2>
-
-            <p className="text-gray-400 mb-8">
-              Looks like you haven't added anything yet.
+          <div className="text-center py-20 bg-[#2A2525]/30 border border-dashed border-gray-800 rounded-[30px] max-w-xl mx-auto px-6">
+            <div className="text-5xl mb-4 opacity-80">🛒</div>
+            <h2 className="text-xl font-bold font-serif mb-2 text-white">Your Cart is Empty</h2>
+            <p className="text-xs text-gray-500 max-w-xs mx-auto mb-6 font-medium">
+              Looks like you haven't added any premium selections to your workspace catalog yet.
             </p>
-
-            <Link
-              to="/shop"
-              className="bg-[#D98C95] px-8 py-4 rounded-full"
-            >
+            <Link to="/shop" className="inline-block bg-[#D98C95] text-[#1E1B1B] font-extrabold px-8 py-3.5 rounded-xl text-xs uppercase tracking-wider hover:bg-[#D98C95]/90 transition-all shadow-md">
               Continue Shopping
             </Link>
           </div>
@@ -149,10 +137,11 @@ function Cart() {
                         <button className="w-10 h-10 rounded-full bg-[#1E1B1B]">
                           -
                         </button>
-
-                        <span>{item.quantity}</span>
-
-                        <button className="w-10 h-10 rounded-full bg-[#1E1B1B]">
+                        <span className="text-xs font-bold font-mono min-w-[14px] text-center text-gray-200">{item.quantity}</span>
+                        <button 
+                          onClick={() => updateQuantity(item.id, 1)} 
+                          className="w-6 h-6 rounded-lg text-gray-400 hover:text-white flex items-center justify-center font-bold text-xs cursor-pointer"
+                        >
                           +
                         </button>
                       </div>
@@ -167,6 +156,16 @@ function Cart() {
 
                     </div>
                   </div>
+
+                  <div className="flex flex-col items-end justify-between h-full pl-2">
+                    <button 
+                      onClick={() => removeFromCart(item.id)}
+                      className="text-xs font-semibold text-rose-400/80 hover:text-rose-400 bg-rose-950/10 hover:bg-rose-950/20 border border-rose-900/20 px-3 py-1.5 rounded-xl transition-all cursor-pointer"
+                    >
+                      Remove
+                    </button>
+                  </div>
+
                 </div>
               );
 })}
@@ -184,12 +183,11 @@ function Cart() {
 
                   <div className="flex justify-between">
                     <span>Subtotal</span>
-                    <span>₹{subtotal}</span>
+                    <span className="text-white font-mono font-bold">₹{subtotal}</span>
                   </div>
-
                   <div className="flex justify-between">
-                    <span>Delivery</span>
-                    <span>₹{delivery}</span>
+                    <span>Delivery Matrix</span>
+                    <span className="text-white font-mono font-bold">₹{delivery}</span>
                   </div>
 
                   <hr className="border-[#433D3D]" />
@@ -204,13 +202,13 @@ function Cart() {
 
                 </div>
 
-                {/* Coupon */}
-                <div className="mt-8">
-                  <input
-                    type="text"
-                    placeholder="Promo Code"
-                    className="w-full bg-[#1E1B1B] p-4 rounded-full outline-none"
-                  />
+                <div className="space-y-3 pt-2">
+                  <button className="w-full bg-[#D98C95] hover:bg-[#D98C95]/90 text-[#1E1B1B] font-extrabold py-3.5 rounded-xl transition-all shadow-md text-xs uppercase tracking-widest cursor-pointer text-center">
+                    Proceed To Checkout 🚀
+                  </button>
+                  <Link to="/shop" className="block text-center text-[11px] font-bold tracking-wider uppercase text-gray-500 hover:text-white transition-colors">
+                    ← Continue Shopping
+                  </Link>
                 </div>
 
                 <button 
@@ -233,9 +231,8 @@ function Cart() {
         )}
 
       </section>
-
       <Footer />
-    </>
+    </div>
   );
 }
 
