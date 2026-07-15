@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { saveCustomBouquet } from "../services/customize";
 import { getCurrentUser } from "../services/auth";
@@ -123,7 +122,6 @@ function Customize() {
   
   return (
     <>
-      <Navbar />
 
       <section className="bg-[#1E1B1B] min-h-screen px-[5%] py-10 text-white">
         <div className="mb-10">
