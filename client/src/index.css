@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Poppins:wght@300;400;500;600&display=swap');
+
+@import "tailwindcss";
+@source "./**/*.{js,jsx,ts,tsx}";
+
+@keyframes scroll {
+
+0%{
+transform:translateX(0);
+}
+
+100%{
+transform:translateX(calc(-50% - 16px));
+}
+
+}
+
+.animate-scroll{
+animation:scroll 25s linear infinite;
+width:max-content;
+}
+
+
+body{
+font-family:'Poppins',sans-serif;
+}
+
+h1,h2,h3,h4,h5{
+font-family:'DM Serif Display',serif;
+}
