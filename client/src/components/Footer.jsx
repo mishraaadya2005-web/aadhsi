@@ -59,11 +59,19 @@ function Footer() {
 
       </div>
 
-      {/* Mini Bottom Credits Bar */}
-      <div className="w-full mt-6 pt-4 border-t border-gray-900/20">
-        <p className="text-center text-[9px] text-[#8A8481] font-medium font-mono tracking-wider uppercase">
+      {/* Mini Bottom Credits & Subtle Staff Link Bar */}
+      <div className="w-full mt-6 pt-4 border-t border-gray-900/40 flex flex-col sm:flex-row items-center justify-between gap-3 text-[9px] text-[#8A8481] font-mono uppercase tracking-wider">
+        <p className="text-center sm:text-left">
           © {new Date().getFullYear()} AADSHI • Handmade with love 🌸
         </p>
+
+        {/* Subtle touch-friendly Admin Link */}
+        <Link 
+          to="/admin" 
+          className="text-[#5A5452] hover:text-[#D98C95] transition-colors py-1.5 px-3 rounded-lg active:scale-95"
+        >
+          Staff Access
+        </Link>
       </div>
     </footer>
   );

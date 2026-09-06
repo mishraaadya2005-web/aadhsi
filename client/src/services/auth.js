@@ -28,3 +28,17 @@ export async function getCurrentUser() {
   const { data } = await supabase.auth.getUser();
   return data.user;
 }
+
+export const signInWithGoogle = async () => {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: `${window.location.origin}/customize`,
+    },
+  });
+
+  if (error) {
+    console.error("Google login error:", error.message);
+  }
+  return data;
+};

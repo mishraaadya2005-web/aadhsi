@@ -1,8 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import { saveCustomBouquet } from "../services/customize";
 import { getCurrentUser } from "../services/auth";
+
 function Customize() {
+  const navigate = useNavigate();
+
   const flowers = [
     { id: 1, name: "Rose", price: 50, image: "/bouquet_assets/flowers/flower1.png" },
     { id: 2, name: "Tulip", price: 60, image: "/bouquet_assets/flowers/flower2.png" },
@@ -33,12 +37,26 @@ function Customize() {
   const [selectedToy, setSelectedToy] = useState(null);
   const [selectedWrapper, setSelectedWrapper] = useState(null);  
   const [message, setMessage] = useState("");
-  const handleSaveBouquet = async () => {
+  const [isSaving, setIsSaving] = useState(false);
+  const [toast, setToast] = useState({ show: false, message: "", type: "info" });
 
+  const showToast = (msg, type = "info") => {
+    setToast({ show: true, message: msg, type });
+    setTimeout(() => {
+      setToast({ show: false, message: "", type: "info" });
+    }, 3500);
+  };
+
+  const handleSaveBouquet = async () => {
+    setIsSaving(true);
     const user = await getCurrentUser();
 
     if (!user) {
-      alert("Please login first");
+      setIsSaving(false);
+      showToast("Please log in to save your custom bouquet ✨", "error");
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
       return;
     }
 
@@ -53,22 +71,22 @@ function Customize() {
     };
 
     const success = await saveCustomBouquet(bouquetData);
+    setIsSaving(false);
 
     if (success) {
-      alert("Bouquet saved successfully");
+      showToast("Bouquet saved to your collection! 🌸", "success");
     } else {
-      alert("Failed to save bouquet");
+      showToast("Failed to save bouquet. Please try again.", "error");
     }
   };
+
   // Guarded Increment/Decrement logic to stop count overflow past constraints
   const handleQuantityChange = (id, delta, isSmall = false) => {
     const prevItems = isSmall ? selectedSmallFlowers : selectedFlowers;
     const limit = isSmall ? 4 : 5;
     
-    // Calculate current total across all items in this group
     const currentTotalCount = Object.values(prevItems).reduce((sum, q) => sum + q, 0);
 
-    // If attempting to increment (+) past max allowed capacity, reject the action
     if (delta > 0 && currentTotalCount >= limit) return;
 
     const setFunc = isSmall ? setSelectedSmallFlowers : setSelectedFlowers;
@@ -122,6 +140,20 @@ function Customize() {
   
   return (
     <>
+      {/* Sleek Custom Toast Popup */}
+      {toast.show && (
+        <div className="fixed bottom-8 right-8 z-50 animate-bounce">
+          <div
+            className={`px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 border text-sm font-medium transition-all ${
+              toast.type === "error"
+                ? "bg-[#251A1A] border-[#D98C95] text-[#D98C95]"
+                : "bg-[#1E251E] border-[#8CD99E] text-[#8CD99E]"
+            }`}
+          >
+            <span>{toast.message}</span>
+          </div>
+        </div>
+      )}
 
       <section className="bg-[#1E1B1B] min-h-screen px-[5%] py-10 text-white">
         <div className="mb-10">
@@ -213,6 +245,14 @@ function Customize() {
                 <span className="text-xs text-zinc-500 font-mono">Premium wrapping setup inc.</span>
               </div>
 
+              <button
+                onClick={handleSaveBouquet}
+                disabled={isSaving}
+                className="mt-8 bg-[#D98C95] text-black px-8 py-3.5 rounded-full font-semibold hover:scale-105 transition-all shadow-lg active:scale-95 disabled:opacity-50"
+              >
+                {isSaving ? "Saving..." : "Save Bouquet"}
+              </button>
+
             </div>
           </div>
 
@@ -303,48 +343,33 @@ function Customize() {
 
             <h2 className="text-xl font-serif mb-4 text-[#D98C95]">5. Elegant Gift Card Letter</h2>
             <textarea
-              
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Inscribe your personal message here..."
               className="w-full h-28 bg-[#1E1B1B] rounded-[20px] p-4 outline-none resize-none border border-zinc-800 focus:border-[#D98C95] transition-all text-sm text-zinc-200 shadow-inner"
-              
             />
           </div>
         </div>
       </section>
       
-        <section className="px-6 py-12 bg-[#1E1B1B]">        
-          <h2 className="font-serif text-5xl text-[#F7F3F0] text-center mb-10">
+      <section className="px-6 py-12 bg-[#1E1B1B] flex flex-col items-center">        
+        <h2 className="font-serif text-5xl text-[#F7F3F0] text-center mb-10">
           Previous AADSHI Creations ✨
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-6xl">
           <div className="h-80 rounded-3xl bg-[#2A2525] border border-[#3A3434] flex items-center justify-center">
-            <span className="text-[#D98C95] text-lg">
-              Bouquet Photo 1
-            </span>
+            <span className="text-[#D98C95] text-lg">Bouquet Photo 1</span>
           </div>
-
           <div className="h-80 rounded-3xl bg-[#2A2525] border border-[#3A3434] flex items-center justify-center">
-            <span className="text-[#D98C95] text-lg">
-              Bouquet Photo 2
-            </span>
+            <span className="text-[#D98C95] text-lg">Bouquet Photo 2</span>
           </div>
-
           <div className="h-80 rounded-3xl bg-[#2A2525] border border-[#3A3434] flex items-center justify-center">
-            <span className="text-[#D98C95] text-lg">
-              Bouquet Photo 3
-            </span>
+            <span className="text-[#D98C95] text-lg">Bouquet Photo 3</span>
           </div>
-
           <div className="h-80 rounded-3xl bg-[#2A2525] border border-[#3A3434] flex items-center justify-center">
-            <span className="text-[#D98C95] text-lg">
-              Bouquet Photo 4
-            </span>
+            <span className="text-[#D98C95] text-lg">Bouquet Photo 4</span>
           </div>
-
         </div>
 
         <p className="text-center text-[#B8A9A9] mt-8 max-w-3xl mx-auto">
@@ -353,20 +378,13 @@ function Customize() {
           as inspiration. Your final bouquet will be crafted uniquely
           according to your selected flowers, wrapping and toy selection.
         </p>
-        <button
-          onClick={handleSaveBouquet}
-          className="mt-6 bg-[#D98C95] text-black px-6 py-3 rounded-full font-semibold hover:scale-105 transition-all"
-        >
-          Save Bouquet
-        </button>
-      </section>
-      
 
-<Footer />
-      
+        
+      </section>
+
+      <Footer />
     </>
   );
 }
 
 export default Customize;
-
